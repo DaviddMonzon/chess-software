@@ -76,6 +76,10 @@ public final class Board {
         return pieces.get(square);
     }
 
+    public boolean isEmpty(Square square) {
+        return !pieces.containsKey(square);
+    }
+
     public Map<Square, Piece> pieces() {
         return pieces;
     }
