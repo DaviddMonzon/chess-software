@@ -4,6 +4,6 @@ public final class RookRule implements MoveRule {
     @Override
     public boolean allows(Board board, Move move) {
         boolean straight = move.fileDelta() == 0 || move.rankDelta() == 0;
-        return straight && move.squaresBetween().stream().allMatch(board::isEmpty);
+        return straight && board.isPathClear(move);
     }
 }

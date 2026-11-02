@@ -80,6 +80,10 @@ public final class Board {
         return !pieces.containsKey(square);
     }
 
+    public boolean isPathClear(Move move) {
+        return move.squaresBetween().stream().allMatch(this::isEmpty);
+    }
+
     public Map<Square, Piece> pieces() {
         return pieces;
     }
