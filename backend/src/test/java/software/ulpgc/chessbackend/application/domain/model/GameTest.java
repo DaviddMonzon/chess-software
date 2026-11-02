@@ -64,6 +64,19 @@ class GameTest {
     }
 
     @Test
+    void a_move_that_breaks_the_piece_rules_is_rejected() {
+        assertThrows(IllegalArgumentException.class, () -> Game.start().play(Move.of("b1", "b3")));
+        assertThrows(IllegalArgumentException.class, () -> Game.start().play(Move.of("a1", "a5")));
+        assertThrows(IllegalArgumentException.class, () -> Game.start().play(Move.of("e2", "e5")));
+    }
+
+    @Test
+    void a_move_that_follows_the_piece_rules_is_played() {
+        Game game = Game.start().play(Move.of("g1", "f3"));
+        assertEquals(Piece.WhiteKnight, game.board().pieces().get(Square.at("f3")));
+    }
+
+    @Test
     void resigning_ends_the_game_and_the_opponent_wins() {
         Game game = Game.start().resign(Color.White);
         assertEquals(GameStatus.Resigned, game.status());
