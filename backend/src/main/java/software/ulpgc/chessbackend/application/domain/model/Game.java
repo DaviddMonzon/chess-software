@@ -51,6 +51,8 @@ public final class Game {
         Piece target = board.pieces().get(move.to());
         if (target != null && target.color() == turn)
             throw new IllegalArgumentException("Cannot capture your own piece at " + move.to());
+        if (!MoveRule.of(piece).allows(board, move))
+            throw new IllegalArgumentException("Illegal move for " + piece + ": " + move.from() + " -> " + move.to());
     }
 
     public boolean isOver() {
