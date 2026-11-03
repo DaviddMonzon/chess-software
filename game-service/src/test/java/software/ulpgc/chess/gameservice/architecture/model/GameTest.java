@@ -3,6 +3,7 @@ package software.ulpgc.chess.gameservice.architecture.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,5 +84,15 @@ class GameTest {
         assertEquals(Result.BlackWins, game.result().orElseThrow());
         assertTrue(game.isOver());
         assertThrows(IllegalStateException.class, () -> game.play(Move.of("e2", "e4")));
+    }
+
+    @Test
+    void a_pinned_piece_cannot_move() {
+        Game game = Game.from(new Board(Map.of(
+                Square.at("e1"), Piece.WhiteKing,
+                Square.at("e2"), Piece.WhiteBishop,
+                Square.at("e8"), Piece.BlackRook,
+                Square.at("a8"), Piece.BlackKing)), Color.White);
+        assertThrows(IllegalArgumentException.class, () -> game.play(Move.of("e2", "d3")));
     }
 }

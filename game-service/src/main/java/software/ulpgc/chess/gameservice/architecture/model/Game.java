@@ -23,6 +23,10 @@ public final class Game {
         return new Game(Board.initial(), Color.White, List.of(), GameStatus.InProgress, null);
     }
 
+    static Game from(Board board, Color turn) {
+        return new Game(board, turn, List.of(), GameStatus.InProgress, null);
+    }
+
     public static Game replay(List<Move> moves) {
         Game game = start();
         for (Move move : moves) game = game.play(move);
