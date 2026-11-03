@@ -1,8 +1,10 @@
 package software.ulpgc.chess.gameservice.architecture.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public final class Game {
     private final Board board;
@@ -37,7 +39,8 @@ public final class Game {
         checkCanPlay(move);
         List<Move> history = new ArrayList<>(moves);
         history.add(move);
-        return new Game(board.move(move.from(), move.to()), turn.opponent(), history, status, result);
+        return new Game(board.move(move.from(), move.to()), turn.opponent(), history, status, result)
+                .withEnding();
     }
 
     public Game resign(Color color) {
@@ -47,18 +50,42 @@ public final class Game {
 
     private void checkCanPlay(Move move) {
         if (isOver()) throw new IllegalStateException("The game is already over");
+        violationOf(move).ifPresent(reason -> {
+            throw new IllegalArgumentException(reason);
+        });
+    }
+
+    private Optional<String> violationOf(Move move) {
         Piece piece = board.pieces().get(move.from());
         if (piece == null)
-            throw new IllegalArgumentException("No piece at " + move.from());
+            return Optional.of("No piece at " + move.from());
         if (piece.color() != turn)
-            throw new IllegalArgumentException("It is " + turn + "'s turn");
+            return Optional.of("It is " + turn + "'s turn");
         Piece target = board.pieces().get(move.to());
         if (target != null && target.color() == turn)
-            throw new IllegalArgumentException("Cannot capture your own piece at " + move.to());
+            return Optional.of("Cannot capture your own piece at " + move.to());
         if (!MoveRule.of(piece).allows(board, move))
-            throw new IllegalArgumentException("Illegal move for " + piece + ": " + move.from() + " -> " + move.to());
+            return Optional.of("Illegal move for " + piece + ": " + move.from() + " -> " + move.to());
         if (board.move(move.from(), move.to()).isInCheck(turn))
-            throw new IllegalArgumentException("Move leaves the " + turn + " king in check: " + move.from() + " -> " + move.to());
+            return Optional.of("Move leaves the " + turn + " king in check: " + move.from() + " -> " + move.to());
+        return Optional.empty();
+    }
+
+    private Game withEnding() {
+        if (hasLegalMoves()) return this;
+        if (isInCheck()) return new Game(board, turn, moves, GameStatus.Checkmate, Result.winner(turn.opponent()));
+        return new Game(board, turn, moves, GameStatus.Stalemate, Result.Draw);
+    }
+
+    private boolean hasLegalMoves() {
+        return board.pieces().keySet().stream()
+                .flatMap(from -> allSquares().filter(to -> !to.equals(from)).map(to -> new Move(from, to)))
+                .anyMatch(move -> violationOf(move).isEmpty());
+    }
+
+    private static Stream<Square> allSquares() {
+        return Arrays.stream(File.values())
+                .flatMap(file -> Arrays.stream(Rank.values()).map(rank -> new Square(file, rank)));
     }
 
     public boolean isInCheck() {

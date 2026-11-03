@@ -149,4 +149,26 @@ class GameTest {
         assertTrue(game.isOver());
         assertThrows(IllegalStateException.class, () -> game.play(Move.of("e2", "e4")));
     }
+
+    @Test
+    void a_check_that_is_not_mate_keeps_the_game_in_progress() {
+        Game game = Game.replay(List.of(
+                Move.of("e2", "e4"), Move.of("f7", "f6"),
+                Move.of("d1", "h5")));
+        assertTrue(game.isInCheck());
+        assertEquals(GameStatus.InProgress, game.status());
+        assertTrue(game.result().isEmpty());
+    }
+
+    @Test
+    void a_player_without_legal_moves_and_not_in_check_is_stalemated() {
+        Game game = Game.from(new Board(Map.of(
+                Square.at("a8"), Piece.BlackKing,
+                Square.at("c6"), Piece.WhiteKing,
+                Square.at("b5"), Piece.WhiteQueen)), Color.White)
+                .play(Move.of("b5", "b6"));
+        assertEquals(GameStatus.Stalemate, game.status());
+        assertEquals(Result.Draw, game.result().orElseThrow());
+        assertFalse(game.isInCheck());
+    }
 }
