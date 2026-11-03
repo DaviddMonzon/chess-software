@@ -1,4 +1,4 @@
-package software.ulpgc.chess.gameservice.application.domain.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
 public enum Rank {
     R1(1),R2(2),R3(3),

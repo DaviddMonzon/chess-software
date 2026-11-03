@@ -1,6 +1,6 @@
-package software.ulpgc.chess.gameservice.application.domain.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
-import static software.ulpgc.chess.gameservice.application.domain.model.Color.*;
+import static software.ulpgc.chess.gameservice.architecture.model.Color.*;
 
 public enum Piece {
     WhitePawn,

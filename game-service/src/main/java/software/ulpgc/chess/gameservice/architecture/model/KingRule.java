@@ -1,4 +1,4 @@
-package software.ulpgc.chess.gameservice.application.domain.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
 public final class KingRule implements MoveRule {
     @Override

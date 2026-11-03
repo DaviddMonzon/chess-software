@@ -1,7 +1,6 @@
-package software.ulpgc.chess.gameservice.application.domain.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
 import org.junit.jupiter.api.Test;
-import software.ulpgc.chess.gameservice.architecture.model.*;
 
 import java.util.List;
 

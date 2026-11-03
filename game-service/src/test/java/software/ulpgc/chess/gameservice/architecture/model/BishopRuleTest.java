@@ -1,10 +1,6 @@
-package software.ulpgc.chess.gameservice.application.domain.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
 import org.junit.jupiter.api.Test;
-import software.ulpgc.chess.gameservice.architecture.model.BishopRule;
-import software.ulpgc.chess.gameservice.architecture.model.Board;
-import software.ulpgc.chess.gameservice.architecture.model.Move;
-import software.ulpgc.chess.gameservice.architecture.model.MoveRule;
 
 import java.util.List;
 import java.util.Map;
