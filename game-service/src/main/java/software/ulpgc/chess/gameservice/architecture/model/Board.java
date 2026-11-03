@@ -1,11 +1,11 @@
-package software.ulpgc.chess.gameservice.application.domain.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static software.ulpgc.chess.gameservice.application.domain.model.Piece.*;
-import static software.ulpgc.chess.gameservice.application.domain.model.Square.at;
+import static software.ulpgc.chess.gameservice.architecture.model.Piece.*;
+import static software.ulpgc.chess.gameservice.architecture.model.Square.at;
 
 public final class Board {
     private final Map<Square, Piece> pieces;
@@ -82,6 +82,10 @@ public final class Board {
 
     public boolean isPathClear(Move move) {
         return move.squaresBetween().stream().allMatch(this::isEmpty);
+    }
+
+    public boolean isInCheck(Color color) {
+        return false;
     }
 
     public Map<Square, Piece> pieces() {
