@@ -57,6 +57,12 @@ public final class Game {
             throw new IllegalArgumentException("Cannot capture your own piece at " + move.to());
         if (!MoveRule.of(piece).allows(board, move))
             throw new IllegalArgumentException("Illegal move for " + piece + ": " + move.from() + " -> " + move.to());
+        if (board.move(move.from(), move.to()).isInCheck(turn))
+            throw new IllegalArgumentException("Move leaves the " + turn + " king in check: " + move.from() + " -> " + move.to());
+    }
+
+    public boolean isInCheck() {
+        return board.isInCheck(turn);
     }
 
     public boolean isOver() {

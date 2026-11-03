@@ -95,4 +95,47 @@ class GameTest {
                 Square.at("a8"), Piece.BlackKing)), Color.White);
         assertThrows(IllegalArgumentException.class, () -> game.play(Move.of("e2", "d3")));
     }
+
+    @Test
+    void a_move_that_ignores_a_check_is_rejected() {
+        Game game = Game.from(new Board(Map.of(
+                Square.at("e1"), Piece.WhiteKing,
+                Square.at("a2"), Piece.WhitePawn,
+                Square.at("e8"), Piece.BlackRook,
+                Square.at("h8"), Piece.BlackKing)), Color.White);
+        assertThrows(IllegalArgumentException.class, () -> game.play(Move.of("a2", "a3")));
+    }
+
+    @Test
+    void a_check_can_be_answered_by_blocking_capturing_or_moving_the_king() {
+        Board board = new Board(Map.of(
+                Square.at("e1"), Piece.WhiteKing,
+                Square.at("h2"), Piece.WhiteRook,
+                Square.at("a8"), Piece.WhiteQueen,
+                Square.at("e8"), Piece.BlackRook,
+                Square.at("h8"), Piece.BlackKing));
+        Game game = Game.from(board, Color.White);
+        assertDoesNotThrow(() -> game.play(Move.of("h2", "e2")));
+        assertDoesNotThrow(() -> game.play(Move.of("a8", "e8")));
+        assertDoesNotThrow(() -> game.play(Move.of("e1", "d1")));
+    }
+
+    @Test
+    void the_king_cannot_move_to_an_attacked_square() {
+        Game game = Game.from(new Board(Map.of(
+                Square.at("e1"), Piece.WhiteKing,
+                Square.at("d8"), Piece.BlackRook,
+                Square.at("h8"), Piece.BlackKing)), Color.White);
+        assertThrows(IllegalArgumentException.class, () -> game.play(Move.of("e1", "d1")));
+    }
+
+    @Test
+    void the_game_knows_when_the_player_to_move_is_in_check() {
+        Game game = Game.from(new Board(Map.of(
+                Square.at("h1"), Piece.WhiteKing,
+                Square.at("a2"), Piece.WhiteRook,
+                Square.at("e8"), Piece.BlackKing)), Color.White);
+        assertFalse(game.isInCheck());
+        assertTrue(game.play(Move.of("a2", "e2")).isInCheck());
+    }
 }
