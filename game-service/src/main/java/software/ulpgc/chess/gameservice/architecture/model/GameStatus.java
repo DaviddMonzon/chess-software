@@ -1,5 +1,5 @@
 package software.ulpgc.chess.gameservice.architecture.model;
 
 public enum GameStatus {
-    InProgress, Resigned
+    InProgress, Resigned, Checkmate, Stalemate
 }

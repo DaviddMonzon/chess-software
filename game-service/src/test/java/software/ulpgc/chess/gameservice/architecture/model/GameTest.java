@@ -138,4 +138,15 @@ class GameTest {
         assertFalse(game.isInCheck());
         assertTrue(game.play(Move.of("a2", "e2")).isInCheck());
     }
+
+    @Test
+    void fools_mate_ends_the_game_and_black_wins() {
+        Game game = Game.replay(List.of(
+                Move.of("f2", "f3"), Move.of("e7", "e5"),
+                Move.of("g2", "g4"), Move.of("d8", "h4")));
+        assertEquals(GameStatus.Checkmate, game.status());
+        assertEquals(Result.BlackWins, game.result().orElseThrow());
+        assertTrue(game.isOver());
+        assertThrows(IllegalStateException.class, () -> game.play(Move.of("e2", "e4")));
+    }
 }
