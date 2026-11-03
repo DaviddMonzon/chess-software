@@ -3,6 +3,7 @@ package software.ulpgc.chess.gameservice.architecture.model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static software.ulpgc.chess.gameservice.architecture.model.Piece.*;
 import static software.ulpgc.chess.gameservice.architecture.model.Square.at;
@@ -85,7 +86,22 @@ public final class Board {
     }
 
     public boolean isInCheck(Color color) {
-        return false;
+        return kingOf(color)
+                .map(king -> isAttacked(king, color.opponent()))
+                .orElse(false);
+    }
+
+    public boolean isAttacked(Square square, Color attacker) {
+        return pieces.entrySet().stream()
+                .filter(entry -> entry.getValue().color() == attacker)
+                .anyMatch(entry -> MoveRule.of(entry.getValue()).allows(this, new Move(entry.getKey(), square)));
+    }
+
+    private Optional<Square> kingOf(Color color) {
+        return pieces.entrySet().stream()
+                .filter(entry -> entry.getValue().isKing() && entry.getValue().color() == color)
+                .map(Map.Entry::getKey)
+                .findFirst();
     }
 
     public Map<Square, Piece> pieces() {
