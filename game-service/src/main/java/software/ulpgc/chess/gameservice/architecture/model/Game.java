@@ -1,0 +1,89 @@
+package software.ulpgc.chess.gameservice.architecture.model;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public final class Game {
+    private final Board board;
+    private final Color turn;
+    private final List<Move> moves;
+    private final GameStatus status;
+    private final Result result;
+
+    private Game(Board board, Color turn, List<Move> moves, GameStatus status, Result result) {
+        this.board = board;
+        this.turn = turn;
+        this.moves = List.copyOf(moves);
+        this.status = status;
+        this.result = result;
+    }
+
+    public static Game start() {
+        return new Game(Board.initial(), Color.White, List.of(), GameStatus.InProgress, null);
+    }
+
+    static Game from(Board board, Color turn) {
+        return new Game(board, turn, List.of(), GameStatus.InProgress, null);
+    }
+
+    public static Game replay(List<Move> moves) {
+        Game game = start();
+        for (Move move : moves) game = game.play(move);
+        return game;
+    }
+
+    public Game play(Move move) {
+        checkCanPlay(move);
+        List<Move> history = new ArrayList<>(moves);
+        history.add(move);
+        return new Game(board.move(move.from(), move.to()), turn.opponent(), history, status, result)
+                .withEnding();
+    }
+
+    public Game resign(Color color) {
+        if (isOver()) throw new IllegalStateException("The game is already over");
+        return new Game(board, turn, moves, GameStatus.Resigned, Result.winner(color.opponent()));
+    }
+
+    private void checkCanPlay(Move move) {
+        if (isOver()) throw new IllegalStateException("The game is already over");
+        MoveValidator.violationOf(board, turn, move).ifPresent(reason -> {
+            throw new IllegalArgumentException(reason);
+        });
+    }
+
+    private Game withEnding() {
+        if (MoveValidator.hasLegalMoves(board, turn)) return this;
+        if (isInCheck()) return new Game(board, turn, moves, GameStatus.Checkmate, Result.winner(turn.opponent()));
+        return new Game(board, turn, moves, GameStatus.Stalemate, Result.Draw);
+    }
+
+    public boolean isInCheck() {
+        return board.isInCheck(turn);
+    }
+
+    public boolean isOver() {
+        return status != GameStatus.InProgress;
+    }
+
+    public Board board() {
+        return board;
+    }
+
+    public Color turn() {
+        return turn;
+    }
+
+    public List<Move> moves() {
+        return moves;
+    }
+
+    public GameStatus status() {
+        return status;
+    }
+
+    public Optional<Result> result() {
+        return Optional.ofNullable(result);
+    }
+}
