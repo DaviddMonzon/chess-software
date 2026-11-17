@@ -1,13 +1,14 @@
-package software.ulpgc.chess.game.architecture.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
-import static software.ulpgc.chess.game.architecture.model.Piece.*;
-import static software.ulpgc.chess.game.architecture.model.Rank.*;
+import static software.ulpgc.chess.gameservice.architecture.model.Piece.*;
+import static software.ulpgc.chess.gameservice.architecture.model.Rank.*;
 
 public record Board(Map<Square, Piece> pieces) {
     private static final List<Piece> WhiteBackRank = List.of(WhiteRook, WhiteKnight, WhiteBishop, WhiteQueen, WhiteKing, WhiteBishop, WhiteKnight, WhiteRook);
@@ -30,11 +31,11 @@ public record Board(Map<Square, Piece> pieces) {
         );
     }
 
-    public Piece pieceAt(Square square) {
-        return pieces.get(square);
+    public Optional<Piece> pieceAt(Square square) {
+        return Optional.ofNullable(pieces.get(square));
     }
 
-    public Piece pieceAt(String square) {
+    public Optional<Piece> pieceAt(String square) {
         return pieceAt(Square.at(square));
     }
 }

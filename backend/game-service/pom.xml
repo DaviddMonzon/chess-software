@@ -11,6 +11,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>game</artifactId>
+    <artifactId>game-service</artifactId>
 
 </project>

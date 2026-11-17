@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>backend/game</module>
+        <module>backend/game-service</module>
     </modules>
 
     <properties>

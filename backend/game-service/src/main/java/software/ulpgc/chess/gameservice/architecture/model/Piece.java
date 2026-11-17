@@ -1,7 +1,7 @@
-package software.ulpgc.chess.game.architecture.model;
+package software.ulpgc.chess.gameservice.architecture.model;
 
-import static software.ulpgc.chess.game.architecture.model.Color.Black;
-import static software.ulpgc.chess.game.architecture.model.Color.White;
+import static software.ulpgc.chess.gameservice.architecture.model.Color.Black;
+import static software.ulpgc.chess.gameservice.architecture.model.Color.White;
 
 public enum Piece {
     WhitePawn(White), WhiteRook(White), WhiteKnight(White),
